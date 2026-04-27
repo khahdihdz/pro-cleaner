@@ -32,7 +32,7 @@ pro-cleaner/
 ### Bước 1 — Tải về
 
 ```
-git clone https://github.com/YOUR_USERNAME/pro-cleaner.git
+git clone https://github.com/khahdihdz/pro-cleaner.git
 cd pro-cleaner
 ```
 
