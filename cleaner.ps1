@@ -52,7 +52,8 @@ function Show-Progress {
     param([string]$Activity, [int]$Duration = 20)
     Write-Color "" "White"
     for ($i = 0; $i -le 100; $i += 5) {
-        $bar = "#" * ($i / 5) + "-" * (20 - $i / 5)
+        $filled = [int]($i / 5)
+        $bar = "#" * $filled + "-" * (20 - $filled)
         Write-Color "`r  [$bar] $i% - $Activity" "Cyan" -NoNewline
         Start-Sleep -Milliseconds $Duration
     }
@@ -73,10 +74,11 @@ function Get-FolderSize {
     param([string]$Path)
     if (-not (Test-Path $Path)) { return 0 }
     try {
-        $size = (Get-ChildItem -Path $Path -Recurse -Force -ErrorAction SilentlyContinue |
+        $sum = (Get-ChildItem -Path $Path -Recurse -Force -ErrorAction SilentlyContinue |
                  Where-Object { -not $_.PSIsContainer } |
                  Measure-Object -Property Length -Sum).Sum
-        return [long]($size ?? 0)
+        if ($null -eq $sum) { return 0L }
+        return [long]$sum
     } catch { return 0 }
 }
 
@@ -131,14 +133,32 @@ function Save-Session {
         downloadsCleanMB  = [math]::Round($DownloadsBytes / 1MB, 2)
     }
 
-    $data = @()
+    # Dùng [System.Collections.ArrayList] để giữ đúng kiểu array
+    $data = [System.Collections.ArrayList]@()
     if (Test-Path $JsonFile) {
-        try { $data = Get-Content $JsonFile -Raw | ConvertFrom-Json } catch {}
-        if ($null -eq $data) { $data = @() }
+        try {
+            $raw = Get-Content $JsonFile -Raw -Encoding UTF8
+            $parsed = $raw | ConvertFrom-Json
+            if ($null -ne $parsed) {
+                # ConvertFrom-Json trả PSCustomObject khi chỉ có 1 item, cần bọc lại
+                if ($parsed -isnot [System.Array]) {
+                    [void]$data.Add($parsed)
+                } else {
+                    foreach ($item in $parsed) { [void]$data.Add($item) }
+                }
+            }
+        } catch {
+            Write-Log "Warning: Khong doc duoc JSON cu, tao moi. $_"
+        }
     }
 
-    $data += $entry
-    $data | ConvertTo-Json -Depth 5 | Set-Content -Path $JsonFile -Encoding UTF8
+    [void]$data.Add($entry)
+
+    # Xuất JSON luôn là array, dùng WriteAllText tránh BOM
+    $json = $data.ToArray() | ConvertTo-Json -Depth 5
+    # Đảm bảo là array nếu chỉ có 1 phần tử
+    if ($data.Count -eq 1) { $json = "[$json]" }
+    [System.IO.File]::WriteAllText($JsonFile, $json, [System.Text.Encoding]::UTF8)
     Write-Log "Session saved: $FilesDeleted files, $(Format-Size $TotalBytes) freed"
 }
 
@@ -190,10 +210,9 @@ function Clean-System {
 function Clean-Downloads {
     param([switch]$DryRun, [switch]$Interactive)
 
-    $dlPath = [System.Environment]::GetFolderPath("MyDocuments")
     $dlPath = Join-Path ([System.Environment]::GetFolderPath("UserProfile")) "Downloads"
 
-    if (-not (Test-Path $dlPath)) {
+    if (-not f.Test-Path $dlPath)) {
         Write-Color "  ⚠ Không tìm thấy thư mục Downloads!" "Yellow"
         return @{ Files = 0; Bytes = 0 }
     }
@@ -233,8 +252,9 @@ function Clean-Downloads {
 
     $groupStats = @{}
     foreach ($g in @("Ảnh","Video","Nén","Cài đặt","Khác")) {
-        $sz = ($classified[$g] | Measure-Object -Property Length -Sum).Sum ?? 0
-        $groupStats[$g] = @{ Files = $classified[$g].Count; Bytes = [long]$sz }
+        $szRaw = ($classified[$g] | Measure-Object -Property Length -Sum).Sum
+        $sz = if ($null -eq $szRaw) { 0L } else { [long]$szRaw }
+        $groupStats[$g] = @{ Files = $classified[$g].Count; Bytes = $sz }
         $line = "    $($icons[$g])  {0,-12} {1,6} files   {2}" -f $g, $classified[$g].Count, (Format-Size $sz)
         Write-Color $line $colors[$g]
     }
@@ -303,8 +323,7 @@ function Clean-Downloads {
 # 6. TẠO LỊCH TỰ ĐỘNG
 # ════════════════════════════════════════════════════════════
 function Tao-LichTuDong {
-    $scriptPath = $MyInvocation.ScriptName
-    if (-not $scriptPath) { $scriptPath = Join-Path $ScriptDir "cleaner.ps1" }
+    $scriptPath = Join-Path $ScriptDir "cleaner.ps1"
 
     $action  = New-ScheduledTaskAction -Execute "powershell.exe" `
                 -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -auto"
