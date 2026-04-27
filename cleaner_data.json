@@ -1,0 +1,51 @@
+[
+  {
+    "time": "2026-04-01 09:05",
+    "filesDeleted": 143,
+    "sizeFreedMB": 620.5,
+    "systemCleanMB": 410.2,
+    "downloadsCleanMB": 210.3
+  },
+  {
+    "time": "2026-04-06 14:22",
+    "filesDeleted": 89,
+    "sizeFreedMB": 310.8,
+    "systemCleanMB": 180.4,
+    "downloadsCleanMB": 130.4
+  },
+  {
+    "time": "2026-04-13 09:10",
+    "filesDeleted": 201,
+    "sizeFreedMB": 1240.0,
+    "systemCleanMB": 760.5,
+    "downloadsCleanMB": 479.5
+  },
+  {
+    "time": "2026-04-15 17:45",
+    "filesDeleted": 57,
+    "sizeFreedMB": 185.2,
+    "systemCleanMB": 120.0,
+    "downloadsCleanMB": 65.2
+  },
+  {
+    "time": "2026-04-20 09:02",
+    "filesDeleted": 312,
+    "sizeFreedMB": 2150.7,
+    "systemCleanMB": 1300.4,
+    "downloadsCleanMB": 850.3
+  },
+  {
+    "time": "2026-04-22 11:30",
+    "filesDeleted": 78,
+    "sizeFreedMB": 430.1,
+    "systemCleanMB": 230.8,
+    "downloadsCleanMB": 199.3
+  },
+  {
+    "time": "2026-04-27 09:00",
+    "filesDeleted": 164,
+    "sizeFreedMB": 875.4,
+    "systemCleanMB": 540.2,
+    "downloadsCleanMB": 335.2
+  }
+]
