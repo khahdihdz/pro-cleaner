@@ -1,0 +1,16 @@
+{
+  "files_deleted": 245,
+  "space_saved_mb": 1530,
+  "last_run": "2026-04-27 15:20",
+  "status": "Hoàn tất",
+  "temp": 420,
+  "downloads": 650,
+  "cache": 260,
+  "recycle": 200,
+  "logs": [
+    "Đã dọn Temp (420 file)",
+    "Đã dọn Cache (260 mục)",
+    "Đã dọn Downloads (650 file)",
+    "Đã xóa Recycle Bin"
+  ]
+}
