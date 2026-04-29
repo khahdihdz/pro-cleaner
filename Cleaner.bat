@@ -36,18 +36,18 @@ rem ============================================================
 cls
 color 0A
 call :LINE
-echo  !  WINDOWS 11 CLEANER PRO  v2.0                              !
-echo  !  Cong Cu Don Rac He Thong - Windows 11                     !
+echo  ^!  WINDOWS 11 CLEANER PRO  v2.0                              ^!
+echo  ^!  Cong Cu Don Rac He Thong - Windows 11                     ^!
 call :LINE
-echo  !                                                            !
-echo  !   [1]  Don Temp     ( %%TEMP%% + C:\Windows\Temp )          !
-echo  !   [2]  Don Cache    ( Prefetch, Recent, DNS )              !
-echo  !   [3]  Don Downloads( file rac .tmp .log .bak .old )       !
-echo  !   [4]  Don Recycle Bin ( Thung rac )                       !
-echo  !   [5]  Chay toan bo ( Tat ca buoc tren )                   !
-echo  !   [6]  Mo Dashboard ( Xem thong ke trinh duyet )           !
-echo  !   [0]  Thoat                                               !
-echo  !                                                            !
+echo  ^!                                                            ^!
+echo  ^!   [1]  Don Temp     ( %%TEMP%% + C:\Windows\Temp )          ^!
+echo  ^!   [2]  Don Cache    ( Prefetch, Recent, DNS )              ^!
+echo  ^!   [3]  Don Downloads( file rac .tmp .log .bak .old )       ^!
+echo  ^!   [4]  Don Recycle Bin ( Thung rac )                       ^!
+echo  ^!   [5]  Chay toan bo ( Tat ca buoc tren )                   ^!
+echo  ^!   [6]  Mo Dashboard ( Xem thong ke trinh duyet )           ^!
+echo  ^!   [0]  Thoat                                               ^!
+echo  ^!                                                            ^!
 call :LINE
 echo.
 echo    Phien nay: !TOTAL_FILES! file da xoa  ^|  Giai phong: !TOTAL_MB! MB
@@ -74,7 +74,7 @@ rem ============================================================
 cls
 color 0B
 call :LINE
-echo  !  [1] DON TEMP                                              !
+echo  ^!  [1] DON TEMP                                              ^!
 call :LINE
 echo.
 
@@ -117,7 +117,7 @@ rem ============================================================
 cls
 color 0B
 call :LINE
-echo  !  [2] DON CACHE                                             !
+echo  ^!  [2] DON CACHE                                             ^!
 call :LINE
 echo.
 
@@ -161,7 +161,7 @@ rem ============================================================
 cls
 color 0E
 call :LINE
-echo  !  [3] DON DOWNLOADS                                         !
+echo  ^!  [3] DON DOWNLOADS                                         ^!
 call :LINE
 echo.
 
@@ -229,7 +229,7 @@ rem ============================================================
 cls
 color 0C
 call :LINE
-echo  !  [4] DON RECYCLE BIN                                       !
+echo  ^!  [4] DON RECYCLE BIN                                       ^!
 call :LINE
 echo.
 
@@ -266,7 +266,7 @@ rem ============================================================
 cls
 color 0A
 call :LINE
-echo  !  [5] CHAY TOAN BO                                          !
+echo  ^!  [5] CHAY TOAN BO                                          ^!
 call :LINE
 echo.
 
@@ -317,7 +317,7 @@ set /a TOTAL_MB=TOTAL_FILES/5
 
 echo.
 call :LINE
-echo  !  HOAN TAT TOAN BO                                          !
+echo  ^!  HOAN TAT TOAN BO                                          ^!
 call :LINE
 echo    Tong file da xoa  : !TOTAL_FILES!
 echo    Dung luong uoc tinh: ~!TOTAL_MB! MB
@@ -380,7 +380,7 @@ rem ============================================================
 cls
 color 0A
 call :LINE
-echo  !  CAM ON DA SU DUNG WINDOWS 11 CLEANER PRO!                 !
+echo  ^!  CAM ON DA SU DUNG WINDOWS 11 CLEANER PRO!                 ^!
 call :LINE
 echo    Da xoa: !TOTAL_FILES! file  ^|  Giai phong: ~!TOTAL_MB! MB
 echo.
