@@ -2,6 +2,10 @@
 chcp 65001 >nul 2>&1
 setlocal enabledelayedexpansion
 
+rem == Bat buoc console dung font ho tro Unicode (Lucida Console / Consolas) ==
+reg add "HKCU\Console" /v "FaceName" /t REG_SZ /d "Lucida Console" /f >nul 2>&1
+reg add "HKCU\Console" /v "FontSize"  /t REG_DWORD /d 0x000E0000 /f >nul 2>&1
+
 color 0A
 title Windows 11 Cleaner Pro v2.0
 
@@ -18,6 +22,9 @@ set /a RC_FILES=0
 
 goto MENU
 
+rem ============================================================
+rem  HAM IN DUONG KE NGANG
+rem ============================================================
 :LINE
 echo  +==============================================================+
 goto :EOF
@@ -26,22 +33,25 @@ goto :EOF
 echo  +--------------------------------------------------------------+
 goto :EOF
 
+rem ============================================================
+rem  MENU CHINH
+rem ============================================================
 :MENU
 cls
 color 0A
 call :LINE
-echo  *  WINDOWS 11 CLEANER PRO  v2.0                              *
-echo  *  Cong Cu Don Rac He Thong - Windows 11                     *
+echo  ^|  WINDOWS 11 CLEANER PRO  v2.0                              ^|
+echo  ^|  Cong Cu Don Rac He Thong - Windows 11                     ^|
 call :LINE
-echo  *                                                            *
-echo  *   [1]  Don Temp     ( %%TEMP%% + C:\Windows\Temp )          *
-echo  *   [2]  Don Cache    ( Prefetch, Recent, DNS )              *
-echo  *   [3]  Don Downloads( file rac .tmp .log .bak .old )       *
-echo  *   [4]  Don Recycle Bin ( Thung rac )                       *
-echo  *   [5]  Chay toan bo ( Tat ca buoc tren )                   *
-echo  *   [6]  Mo Dashboard ( Xem thong ke trinh duyet )           *
-echo  *   [0]  Thoat                                               *
-echo  *                                                            *
+echo  ^|                                                            ^|
+echo  ^|   [1]  Don Temp     ( %%TEMP%% + C:\Windows\Temp )          ^|
+echo  ^|   [2]  Don Cache    ( Prefetch, Recent, DNS )              ^|
+echo  ^|   [3]  Don Downloads( file rac .tmp .log .bak .old )       ^|
+echo  ^|   [4]  Don Recycle Bin ( Thung rac )                       ^|
+echo  ^|   [5]  Chay toan bo ( Tat ca buoc tren )                   ^|
+echo  ^|   [6]  Mo Dashboard ( Xem thong ke trinh duyet )           ^|
+echo  ^|   [0]  Thoat                                               ^|
+echo  ^|                                                            ^|
 call :LINE
 echo.
 echo    Phien nay: !TOTAL_FILES! file da xoa  ^|  Giai phong: !TOTAL_MB! MB
@@ -57,19 +67,24 @@ if "!CHOICE!"=="6" goto OPEN_DASHBOARD
 if "!CHOICE!"=="0" goto EXIT_PROGRAM
 
 echo.
-echo    [X] Lua chon khong hop le. Vui long chon tu 0 den 6.
+echo    [!] Lua chon khong hop le. Vui long chon tu 0 den 6.
 timeout /t 2 >nul
 goto MENU
 
+rem ============================================================
+rem  [1] DON TEMP
+rem ============================================================
 :CLEAN_TEMP
 cls
 color 0B
 call :LINE
-echo  *  [1] DON TEMP                                              *
+echo  ^|  [1] DON TEMP                                              ^|
 call :LINE
 echo.
+
 set /a CNT=0
 set /a CNT2=0
+
 echo    Dang quet: %%TEMP%%
 for /f %%i in ('dir /s /b /a-d "%temp%\*" 2^>nul ^| find /c /v ""') do set /a CNT=%%i
 echo    Tim thay: !CNT! file
@@ -77,15 +92,18 @@ rd /s /q "%temp%" >nul 2>&1
 md "%temp%" >nul 2>&1
 echo    [OK] Da xoa %%TEMP%%
 echo.
+
 echo    Dang quet: C:\Windows\Temp
 for /f %%i in ('dir /s /b /a-d "C:\Windows\Temp\*" 2^>nul ^| find /c /v ""') do set /a CNT2=%%i
 echo    Tim thay: !CNT2! file
 del /f /s /q "C:\Windows\Temp\*" >nul 2>&1
 for /d %%d in ("C:\Windows\Temp\*") do rd /s /q "%%d" >nul 2>&1
 echo    [OK] Da xoa C:\Windows\Temp
+
 set /a TEMP_FILES=CNT+CNT2
 set /a TOTAL_FILES+=TEMP_FILES
 set /a TOTAL_MB+=TEMP_FILES/10
+
 echo.
 call :LINE2
 echo    KET QUA: Da xoa !TEMP_FILES! file temp
@@ -96,31 +114,40 @@ echo.
 pause
 goto MENU
 
+rem ============================================================
+rem  [2] DON CACHE
+rem ============================================================
 :CLEAN_CACHE
 cls
 color 0B
 call :LINE
-echo  *  [2] DON CACHE                                             *
+echo  ^|  [2] DON CACHE                                             ^|
 call :LINE
 echo.
+
 set /a CC=0
 set /a CC2=0
+
 echo    Dang don: C:\Windows\Prefetch
 for /f %%i in ('dir /b "C:\Windows\Prefetch\*.pf" 2^>nul ^| find /c /v ""') do set /a CC=%%i
 del /f /q "C:\Windows\Prefetch\*.pf" >nul 2>&1
 echo    [OK] Da don Prefetch ( !CC! file )
 echo.
+
 echo    Dang don: Recent
 for /f %%i in ('dir /b "%appdata%\Microsoft\Windows\Recent\*" 2^>nul ^| find /c /v ""') do set /a CC2=%%i
 del /f /q "%appdata%\Microsoft\Windows\Recent\*" >nul 2>&1
 echo    [OK] Da don Recent ( !CC2! file )
 echo.
+
 echo    Dang xoa DNS cache...
 ipconfig /flushdns >nul 2>&1
 echo    [OK] Da xoa DNS cache
+
 set /a CACHE_FILES=CC+CC2
 set /a TOTAL_FILES+=CACHE_FILES
 set /a TOTAL_MB+=CACHE_FILES/8
+
 echo.
 call :LINE2
 echo    KET QUA: Da don !CACHE_FILES! muc cache
@@ -131,35 +158,58 @@ echo.
 pause
 goto MENU
 
+rem ============================================================
+rem  [3] DON DOWNLOADS
+rem ============================================================
 :CLEAN_DOWNLOADS
 cls
 color 0E
 call :LINE
-echo  *  [3] DON DOWNLOADS                                         *
+echo  ^|  [3] DON DOWNLOADS                                         ^|
 call :LINE
 echo.
+
+set "DLP=%USERPROFILE%\Downloads"
 set /a DC=0
 set /a ASK=0
-echo    Thu muc: %USERPROFILE%\Downloads
+
+echo    Thu muc: !DLP!
+echo    [i] Giu nguyen thu muc con - chi xoa file rac ben trong
 echo.
-echo    -- Buoc 1: Tu dong xoa file rac --
+echo    -- Buoc 1: Xoa file rac (.tmp .log .bak .old) trong tat ca thu muc --
 echo.
+
+rem Xoa file rac trong thu muc goc Downloads
 for %%E in (tmp log bak old) do (
     set /a EC=0
-    for /f %%i in ('dir /b /a-d "%USERPROFILE%\Downloads\*.%%E" 2^>nul ^| find /c /v ""') do set /a EC=%%i
+    for /f %%i in ('dir /b /a-d "!DLP!\*.%%E" 2^>nul ^| find /c /v ""') do set /a EC=%%i
     if !EC! gtr 0 (
-        del /f /q "%USERPROFILE%\Downloads\*.%%E" >nul 2>&1
+        del /f /q "!DLP!\*.%%E" >nul 2>&1
         set /a DC+=EC
-        echo    [OK] Xoa !EC! file *.%%E
-    ) else (
-        echo    [--] Khong co file *.%%E
+        echo    [OK] Goc: Xoa !EC! file *.%%E
     )
 )
+
+rem Xoa file rac trong tung thu muc con hien co (chi 1 cap - giu cau truc)
+for /d %%D in ("!DLP!\*") do (
+    set "SUBDIR=%%D"
+    for %%E in (tmp log bak old) do (
+        set /a EC2=0
+        for /f %%i in ('dir /b /a-d "%%D\*.%%E" 2^>nul ^| find /c /v ""') do set /a EC2=%%i
+        if !EC2! gtr 0 (
+            del /f /q "%%D\*.%%E" >nul 2>&1
+            set /a DC+=EC2
+            echo    [OK] [%%~nxD]: Xoa !EC2! file *.%%E
+        )
+    )
+)
+
 echo.
-echo    -- Buoc 2: File cai dat cu qua 30 ngay --
+echo    -- Buoc 2: File cai dat cu qua 30 ngay (chi trong thu muc goc) --
 echo.
+
 for %%E in (exe msi zip) do (
-    for /f "delims=" %%F in ('forfiles /p "%USERPROFILE%\Downloads" /m "*.%%E" /d -30 /c "cmd /c echo @path" 2^>nul') do (
+    for /f "delims=" %%F in ('forfiles /p "!DLP!" /m "*.%%E" /d -30 /c "cmd /c echo @path" 2^>nul') do (
         set /a ASK+=1
         echo    File: %%F
         set /p "YN=    >> Xoa file nay? (Y/N): "
@@ -173,13 +223,16 @@ for %%E in (exe msi zip) do (
         echo.
     )
 )
+
 if !ASK!==0 echo    [--] Khong co file .exe/.msi/.zip nao cu qua 30 ngay
+
 set /a DL_FILES=DC
 set /a TOTAL_FILES+=DC
 set /a TOTAL_MB+=DC*5
+
 echo.
 call :LINE2
-echo    KET QUA: Da xoa !DC! file trong Downloads
+echo    KET QUA: Da xoa !DC! file trong Downloads (thu muc con giu nguyen)
 call :LINE2
 call :SAVE_STATS
 echo    [OK] Da ghi stats.json
@@ -187,26 +240,33 @@ echo.
 pause
 goto MENU
 
+rem ============================================================
+rem  [4] DON RECYCLE BIN
+rem ============================================================
 :CLEAN_RECYCLE
 cls
 color 0C
 call :LINE
-echo  *  [4] DON RECYCLE BIN                                       *
+echo  ^|  [4] DON RECYCLE BIN                                       ^|
 call :LINE
 echo.
+
 set /p "CRB=    >> Xac nhan don Recycle Bin? (Y/N): "
 if /i not "!CRB!"=="Y" (
     echo    [--] Da huy.
     timeout /t 2 >nul
     goto MENU
 )
+
 echo.
 echo    Dang don thung rac...
 PowerShell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul 2>&1
 echo    [OK] Da lam sach Recycle Bin
+
 set /a RC_FILES=50
 set /a TOTAL_FILES+=50
 set /a TOTAL_MB+=20
+
 echo.
 call :LINE2
 echo    KET QUA: Recycle Bin da sach hoan toan
@@ -217,15 +277,20 @@ echo.
 pause
 goto MENU
 
+rem ============================================================
+rem  [5] CHAY TOAN BO
+rem ============================================================
 :CLEAN_ALL
 cls
 color 0A
 call :LINE
-echo  *  [5] CHAY TOAN BO                                          *
+echo  ^|  [5] CHAY TOAN BO                                          ^|
 call :LINE
 echo.
+
 set /p "CAL=    >> Xac nhan chay tat ca? (Y/N): "
 if /i not "!CAL!"=="Y" goto MENU
+
 echo.
 echo    [1/4] Dang don Temp...
 set /a T1=0
@@ -236,6 +301,7 @@ del /f /s /q "C:\Windows\Temp\*" >nul 2>&1
 set /a TEMP_FILES=T1
 set /a TOTAL_FILES+=T1
 echo    [OK] Temp: !T1! file
+
 echo.
 echo    [2/4] Dang don Cache...
 set /a T2=0
@@ -246,6 +312,7 @@ ipconfig /flushdns >nul 2>&1
 set /a CACHE_FILES=T2
 set /a TOTAL_FILES+=T2
 echo    [OK] Cache: !T2! muc
+
 echo.
 echo    [3/4] Dang don Downloads...
 set /a T3=0
@@ -253,21 +320,31 @@ for %%E in (tmp log bak old) do (
     for /f %%i in ('dir /b /a-d "%USERPROFILE%\Downloads\*.%%E" 2^>nul ^| find /c /v ""') do set /a T3+=%%i
     del /f /q "%USERPROFILE%\Downloads\*.%%E" >nul 2>&1
 )
+rem Xoa file rac trong tung thu muc con hien co
+for /d %%D in ("%USERPROFILE%\Downloads\*") do (
+    for %%E in (tmp log bak old) do (
+        for /f %%i in ('dir /b /a-d "%%D\*.%%E" 2^>nul ^| find /c /v ""') do set /a T3+=%%i
+        del /f /q "%%D\*.%%E" >nul 2>&1
+    )
+)
 set /a DL_FILES=T3
 set /a TOTAL_FILES+=T3
-echo    [OK] Downloads: !T3! file
+echo    [OK] Downloads: !T3! file (thu muc con giu nguyen)
+
 echo.
 echo    [4/4] Dang don Recycle Bin...
 PowerShell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul 2>&1
 set /a RC_FILES=50
 set /a TOTAL_FILES+=50
 echo    [OK] Recycle Bin: Sach
+
 set /a TOTAL_MB=TOTAL_FILES/5
+
 echo.
 call :LINE
-echo  *  HOAN TAT TOAN BO                                          *
+echo  ^|  HOAN TAT TOAN BO                                          ^|
 call :LINE
-echo    Tong file da xoa   : !TOTAL_FILES!
+echo    Tong file da xoa  : !TOTAL_FILES!
 echo    Dung luong uoc tinh: ~!TOTAL_MB! MB
 call :LINE2
 call :SAVE_STATS
@@ -277,52 +354,200 @@ set /p "OD=    >> Mo Dashboard ngay? (Y/N): "
 if /i "!OD!"=="Y" goto OPEN_DASHBOARD
 goto MENU
 
+rem ============================================================
+rem  [6] MO DASHBOARD
+rem ============================================================
 :OPEN_DASHBOARD
-if exist "%DASHBOARD_FILE%" (
+if not exist "%DASHBOARD_FILE%" (
     echo.
-    echo    Dang mo Dashboard...
-    start "" "%DASHBOARD_FILE%"
-    timeout /t 2 >nul
-) else (
-    echo.
-    echo    [X] Khong tim thay dashboard.html
+    echo    [!] Khong tim thay dashboard.html
     echo    Hay dat dashboard.html cung thu muc voi Cleaner.bat
     echo.
     pause
+    goto MENU
 )
+
+rem -- Kiem tra Python co san khong --
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo.
+    echo    [!] Khong tim thay Python. Vui long cai Python va thu lai.
+    echo    Tai: https://www.python.org/downloads/
+    echo.
+    pause
+    goto MENU
+)
+
+echo.
+echo    Dang khoi dong HTTP server (python -m http.server)...
+
+rem -- Chon port bat dau --
+set /a PORT=8000
+
+rem -------------------------------------------------------
+rem  Kiem tra port con trong
+rem -------------------------------------------------------
+:CHECK_PORT
+PowerShell -NoProfile -Command ^
+  "if(Get-NetTCPConnection -State Listen -LocalPort !PORT! -ErrorAction SilentlyContinue){exit 1}else{exit 0}" >nul 2>&1
+if errorlevel 1 (
+    set /a PORT+=1
+    if !PORT! gtr 8800 (
+        echo    [!] Khong tim duoc port trong tu 8000-8800. Thoat.
+        pause
+        goto MENU
+    )
+    goto CHECK_PORT
+)
+
+rem -------------------------------------------------------
+rem  Ghi Python server script ho tro endpoint /shutdown
+rem  Script xu ly: phuc vu file tinh + GET /shutdown tu tat server
+rem -------------------------------------------------------
+set "PY_SCRIPT=%TEMP%\cleaner_srv_!PORT!.py"
+set "PID_FILE=%TEMP%\cleaner_srv_!PORT!.pid"
+set "SRV_DIR=%SCRIPT_DIR%"
+
+rem -- Viet file .py bang PowerShell de tranh ky tu dac biet bat --
+PowerShell -NoProfile -Command ^
+  "$port=!PORT!; $sdir='!SRV_DIR!'; $pf='!PID_FILE!'; $py='!PY_SCRIPT!';" ^
+  "$lines = @(" ^
+  "  'import http.server, os, sys, threading'," ^
+  "  'PORT=%port%'" ^
+  "  .Replace('%port%',$port)," ^
+  "  'DIR=r\"\"\"$sdir\"\"\"'" ^
+  "  .Replace('$sdir',$sdir.TrimEnd('\'))," ^
+  "  'PID_FILE=r\"\"\"$pf\"\"\"'" ^
+  "  .Replace('$pf',$pf)," ^
+  "  'open(PID_FILE,\"w\").write(str(os.getpid()))'," ^
+  "  'class H(http.server.SimpleHTTPRequestHandler):'," ^
+  "  '    def __init__(self,*a,**k): super().__init__(*a,directory=DIR,**k)'," ^
+  "  '    def do_GET(self):'," ^
+  "  '        if self.path==\"/shutdown\":'," ^
+  "  '            self.send_response(200)'," ^
+  "  '            self.send_header(\"Access-Control-Allow-Origin\",\"*\")'," ^
+  "  '            self.end_headers()'," ^
+  "  '            self.wfile.write(b\"ok\")'," ^
+  "  '            t=threading.Thread(target=self.server.shutdown,daemon=True)'," ^
+  "  '            t.start()'," ^
+  "  '        else: super().do_GET()'," ^
+  "  '    def log_message(self,*a): pass'," ^
+  "  'srv=http.server.HTTPServer((\"localhost\",PORT),H)'," ^
+  "  'srv.serve_forever()'," ^
+  "  'try:'," ^
+  "  '    os.remove(PID_FILE)'," ^
+  "  'except: pass'" ^
+  "); [IO.File]::WriteAllLines($py,$lines,[Text.UTF8Encoding]::new($false))" >nul 2>&1
+
+rem -- Luu port dang chay --
+set "DASHBOARD_PORT=!PORT!"
+
+rem -- Khoi dong Python server qua PowerShell an (khong hien cua so cmd) --
+PowerShell -NoProfile -WindowStyle Hidden -Command ^
+  "Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile -Command python \"!PY_SCRIPT!\"'" >nul 2>&1
+
+rem -- Cho server san sang --
+timeout /t 2 >nul
+
+rem -- Doc PID --
+if exist "!PID_FILE!" (
+    set /p SRV_PID=<"!PID_FILE!"
+)
+
+rem -- Mo trinh duyet --
+start "" "http://localhost:!PORT!/dashboard.html"
+
+echo.
+call :LINE
+echo  ^|  DASHBOARD DA KHOI DONG                                    ^|
+call :LINE
+echo    URL   : http://localhost:!PORT!/dashboard.html
+echo    Port  : !PORT!
+echo    Server: python -m http.server - chay ngam
+call :LINE2
+echo    [i] Server tu dong dung khi ban dong tab trinh duyet.
+echo    [i] Hoac chon [0] Thoat de dung server thu cong.
+echo.
+timeout /t 3 >nul
 goto MENU
 
+
+rem ============================================================
+rem  GHI STATS.JSON  (dung PowerShell de dam bao UTF-8 va escape dung)
+rem ============================================================
 :SAVE_STATS
-for /f "tokens=2 delims==" %%D in ('wmic os get LocalDateTime /value 2^>nul') do set "DT=%%D"
-set "DTS=%DT:~0,4%-%DT:~4,2%-%DT:~6,2% %DT:~8,2%:%DT:~10,2%"
-(
-echo {
-echo   "files_deleted": %TOTAL_FILES%,
-echo   "space_saved_mb": %TOTAL_MB%,
-echo   "last_run": "%DTS%",
-echo   "status": "Hoan tat",
-echo   "temp": %TEMP_FILES%,
-echo   "downloads": %DL_FILES%,
-echo   "cache": %CACHE_FILES%,
-echo   "recycle": %RC_FILES%,
-echo   "logs": [
-echo     "Da don Temp (%TEMP_FILES% file)",
-echo     "Da don Cache (%CACHE_FILES% muc)",
-echo     "Da don Downloads (%DL_FILES% file)",
-echo     "Da xoa Recycle Bin"
-echo   ]
-echo }
-) > "%STATS_FILE%"
+rem -- Lay thoi gian hien tai qua PowerShell (tranh loi wmic) --
+for /f "usebackq delims=" %%T in (`PowerShell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd HH:mm'"`) do set "DTS=%%T"
+
+rem -- Lay gia tri bien vao local de dung ben trong PowerShell --
+set "_TF=!TEMP_FILES!"
+set "_CF=!CACHE_FILES!"
+set "_DL=!DL_FILES!"
+set "_RC=!RC_FILES!"
+set "_TT=!TOTAL_FILES!"
+set "_MB=!TOTAL_MB!"
+set "_DT=!DTS!"
+set "_SF=!STATS_FILE!"
+
+rem -- Ghi UTF-8 khong BOM bang StreamWriter (JSON.parse yeu cau khong co BOM) --
+PowerShell -NoProfile -Command ^
+  "$tf=[int]'!_TF!'; $cf=[int]'!_CF!'; $dl=[int]'!_DL!'; $rc=[int]'!_RC!'; $tt=[int]'!_TT!'; $mb=[int]'!_MB!';" ^
+  "$dt='!_DT!'; $sf='!_SF!';" ^
+  "$json = [ordered]@{" ^
+  "  files_deleted = $tt;" ^
+  "  space_saved_mb = $mb;" ^
+  "  last_run = $dt;" ^
+  "  status = 'Hoan tat';" ^
+  "  temp = $tf;" ^
+  "  downloads = $dl;" ^
+  "  cache = $cf;" ^
+  "  recycle = $rc;" ^
+  "  logs = @(" ^
+  "    \"Da don Temp ($tf file)\"," ^
+  "    \"Da don Cache ($cf muc)\"," ^
+  "    \"Da don Downloads ($dl file)\"," ^
+  "    'Da xoa Recycle Bin'" ^
+  "  )" ^
+  "};" ^
+  "$content = ConvertTo-Json $json;" ^
+  "$utf8NoBom = New-Object System.Text.UTF8Encoding $false;" ^
+  "[System.IO.File]::WriteAllText($sf, $content, $utf8NoBom)"
+
 goto :EOF
 
+rem ============================================================
+rem  THOAT
+rem ============================================================
 :EXIT_PROGRAM
 cls
 color 0A
 call :LINE
-echo  *  CAM ON DA SU DUNG WINDOWS 11 CLEANER PRO                  *
+echo  ^|  CAM ON DA SU DUNG WINDOWS 11 CLEANER PRO!                 ^|
 call :LINE
 echo    Da xoa: !TOTAL_FILES! file  ^|  Giai phong: ~!TOTAL_MB! MB
 echo.
+
+rem -- Dung python HTTP server neu dang chay --
+if defined DASHBOARD_PORT (
+    echo    Dang dung python HTTP server tai port !DASHBOARD_PORT!...
+    rem Thu goi /shutdown endpoint truoc
+    PowerShell -NoProfile -Command ^
+      "try { Invoke-WebRequest -Uri 'http://localhost:!DASHBOARD_PORT!/shutdown' -UseBasicParsing -TimeoutSec 2 | Out-Null } catch {}" >nul 2>&1
+    timeout /t 1 >nul
+    rem Du phong: kill qua PID neu con song
+    if defined SRV_PID (
+        PowerShell -NoProfile -Command ^
+          "try { Stop-Process -Id !SRV_PID! -Force -ErrorAction SilentlyContinue } catch {}" >nul 2>&1
+    )
+    rem Xoa file script va pid tam
+    set "PY_SCRIPT=%TEMP%\cleaner_srv_!DASHBOARD_PORT!.py"
+    set "PID_FILE=%TEMP%\cleaner_srv_!DASHBOARD_PORT!.pid"
+    if exist "!PY_SCRIPT!" del /f /q "!PY_SCRIPT!" >nul 2>&1
+    if exist "!PID_FILE!"  del /f /q "!PID_FILE!"  >nul 2>&1
+    echo    [OK] Server da dung.
+    echo.
+)
+
 timeout /t 3 >nul
 endlocal
 exit /b 0

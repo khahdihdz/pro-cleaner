@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Windows 11 Cleaner Pro – Dashboard</title>
 
@@ -17,11 +18,26 @@
   />
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-  <!-- Google Fonts: Space Grotesk (display) + Be Vietnam Pro (body - full diacritics) -->
+  <!-- Google Fonts: Be Vietnam Pro (body/UI - đầy đủ dấu tiếng Việt) + Orbitron (số/display) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Orbitron:wght@700;900&display=swap&subset=vietnamese"
     rel="stylesheet"
   />
+  <!-- Dự phòng offline: nếu không tải được Google Fonts, dùng system font hỗ trợ Unicode -->
+  <style>
+    @font-face {
+      font-family: 'Be Vietnam Pro';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Be Vietnam Pro'), local('BeVietnamPro-Regular'),
+           local('Arial Unicode MS'), local('Segoe UI');
+      unicode-range: U+0000-00FF, U+0102-0103, U+0110-0111,
+                     U+0128-0129, U+0168-0169, U+01A0-01A1,
+                     U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+    }
+  </style>
 
   <style>
     /* ===================================================
@@ -44,8 +60,8 @@
       --text-primary:   #e8edf8;
       --text-secondary: #7d8fae;
       --text-muted:     #4a5a7a;
-      --font-display:   'Orbitron', monospace;
-      --font-body:      'Be Vietnam Pro', 'Segoe UI', Tahoma, Arial, sans-serif;
+      --font-display:   'Orbitron', 'Courier New', monospace;
+      --font-body:      'Be Vietnam Pro', 'Segoe UI', 'Arial Unicode MS', 'Tahoma', Arial, sans-serif;
       --radius:         14px;
       --radius-sm:      8px;
       --shadow:         0 4px 24px #00000055;
@@ -64,6 +80,10 @@
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 15px;
+      font-feature-settings: "kern" 1, "liga" 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
       line-height: 1.6;
       min-height: 100vh;
       overflow-x: hidden;
@@ -969,60 +989,134 @@
 
     /* =====================================================
        TẢI & RENDER DỮ LIỆU TỪ stats.json
+       - Ưu tiên đọc từ window.__STATS (inject bởi Cleaner.bat)
+       - Fallback sang XMLHttpRequest (khi mở qua HTTP server)
+       - Hiển thị lỗi rõ ràng nếu cả hai đều thất bại
     ===================================================== */
-    async function loadStats(manual = false) {
-      try {
-        // Thêm cache-bust để tránh browser cache cũ
-        const res = await fetch('stats.json?t=' + Date.now());
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-
-        // --- Stat cards ---
-        const filesEl  = document.getElementById('statFiles');
-        const spaceEl  = document.getElementById('statSpace');
-        animateCounter(filesEl, data.files_deleted || 0);
-        animateCounter(spaceEl, data.space_saved_mb || 0, ' MB');
-
-        document.getElementById('statStatus').textContent    = data.status    || '--';
-        document.getElementById('statTime').textContent      = data.last_run  || '--';
-        document.getElementById('lastRunHeader').textContent = data.last_run  || '--';
-        document.getElementById('headerStatus').textContent  = data.status    || '--';
-
-        // --- Progress bars ---
-        const temp      = data.temp      || 0;
-        const downloads = data.downloads || 0;
-        const cache     = data.cache     || 0;
-        const recycle   = data.recycle   || 0;
-        updateProgress(temp, downloads, cache, recycle);
-
-        // --- Chart ---
-        initChart(temp, downloads, cache, recycle);
-
-        // --- Logs ---
-        renderLogs(data.logs || []);
-
-        // --- Timestamp ---
-        const now = new Date().toLocaleString('vi-VN');
-        document.getElementById('logLastUpdate').textContent = now;
-        document.getElementById('footerTime').textContent    = now;
-
-        // Ẩn loading
-        hideLoading();
-
-      } catch (err) {
-        console.warn('Không thể tải stats.json:', err);
-        hideLoading();
-
-        // Hiện thông báo lỗi nhẹ nếu tải thủ công
-        if (manual) {
-          const logLastUpdate = document.getElementById('logLastUpdate');
-          logLastUpdate.textContent = '⚠ Không tải được dữ liệu';
-          logLastUpdate.style.color = 'var(--accent-red)';
-          setTimeout(() => {
-            logLastUpdate.style.color = '';
-          }, 3000);
+    function loadStats(manual = false) {
+      return new Promise((resolve) => {
+        // --- Ưu tiên 1: dữ liệu đã được nhúng sẵn bởi Cleaner.bat ---
+        if (window.__STATS && typeof window.__STATS === 'object') {
+          renderData(window.__STATS);
+          clearErrorBanner();
+          hideLoading();
+          resolve();
+          return;
         }
+
+        const xhr = new XMLHttpRequest();
+        const url = 'stats.json?t=' + Date.now();
+
+        xhr.open('GET', url, true);
+        xhr.responseType = 'text';
+        xhr.overrideMimeType('application/json; charset=utf-8');
+
+        xhr.onload = function () {
+          if (xhr.status === 0 || xhr.status === 200) {
+            try {
+              // Đảm bảo decode đúng UTF-8, xử lý BOM nếu có
+              let raw = xhr.responseText;
+              if (raw.charCodeAt(0) === 0xFEFF) raw = raw.slice(1); // Bỏ BOM
+              const data = JSON.parse(raw);
+              renderData(data);
+              clearErrorBanner();
+            } catch (e) {
+              console.error('Lỗi parse JSON:', e);
+              showErrorBanner('parse', manual);
+            }
+          } else {
+            showErrorBanner('http', manual);
+          }
+          hideLoading();
+          resolve();
+        };
+
+        xhr.onerror = function () {
+          // Thường xảy ra khi mở file:// trực tiếp trên Chrome
+          console.warn('XHR error — có thể bị chặn bởi CORS file://');
+          showErrorBanner('cors', manual);
+          hideLoading();
+          resolve();
+        };
+
+        xhr.send();
+      });
+    }
+
+    /* =====================================================
+       RENDER DỮ LIỆU (tách khỏi loadStats để tái sử dụng)
+    ===================================================== */
+    function renderData(data) {
+      // --- Stat cards ---
+      const filesEl = document.getElementById('statFiles');
+      const spaceEl = document.getElementById('statSpace');
+      animateCounter(filesEl, data.files_deleted || 0);
+      animateCounter(spaceEl, data.space_saved_mb || 0, ' MB');
+
+      document.getElementById('statStatus').textContent    = data.status   || '--';
+      document.getElementById('statTime').textContent      = data.last_run || '--';
+      document.getElementById('lastRunHeader').textContent = data.last_run || '--';
+      document.getElementById('headerStatus').textContent  = data.status   || '--';
+
+      // --- Progress bars ---
+      const temp      = data.temp      || 0;
+      const downloads = data.downloads || 0;
+      const cache     = data.cache     || 0;
+      const recycle   = data.recycle   || 0;
+      updateProgress(temp, downloads, cache, recycle);
+
+      // --- Chart ---
+      initChart(temp, downloads, cache, recycle);
+
+      // --- Logs ---
+      renderLogs(data.logs || []);
+
+      // --- Timestamp ---
+      const now = new Date().toLocaleString('vi-VN');
+      document.getElementById('logLastUpdate').textContent = now;
+      document.getElementById('footerTime').textContent    = now;
+    }
+
+    /* =====================================================
+       HIỂN THỊ / XÓA BANNER LỖI
+    ===================================================== */
+    function showErrorBanner(type, manual) {
+      let banner = document.getElementById('errorBanner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'errorBanner';
+        banner.style.cssText = [
+          'position:fixed','bottom:1.2rem','left:50%',
+          'transform:translateX(-50%)','z-index:9998',
+          'background:#1e1014','border:1px solid #ef444466',
+          'color:#fca5a5','border-radius:10px','padding:0.75rem 1.2rem',
+          'font-size:0.8rem','max-width:92vw','text-align:center',
+          "font-family:'Be Vietnam Pro',sans-serif",'line-height:1.5',
+          'box-shadow:0 4px 20px #00000066'
+        ].join(';');
+        document.body.appendChild(banner);
       }
+
+      const msgs = {
+        cors:  '⚠ Không thể tải dữ liệu.<br>'
+             + 'Hãy mở Dashboard qua <b>Cleaner.bat → Mở Dashboard</b><br>'
+             + 'thay vì mở trực tiếp file <code style="background:#2a1a1a;padding:2px 6px;border-radius:4px">dashboard.html</code>',
+        http:  '⚠ Không thể tải stats.json (HTTP error).<br>Kiểm tra file có cùng thư mục không.',
+        parse: '⚠ stats.json bị lỗi định dạng — hãy chạy lại Cleaner.bat để tái tạo file.'
+      };
+
+      banner.innerHTML = msgs[type] || '⚠ Không tải được dữ liệu.';
+      banner.style.display = 'block';
+
+      if (!manual) {
+        // Tự ẩn sau 8 giây nếu không phải thủ công
+        setTimeout(clearErrorBanner, 8000);
+      }
+    }
+
+    function clearErrorBanner() {
+      const b = document.getElementById('errorBanner');
+      if (b) b.style.display = 'none';
     }
 
     /* =====================================================
@@ -1054,6 +1148,31 @@
       overlay.classList.add('hidden');
       setTimeout(() => overlay.style.display = 'none', 400);
     }
+
+    /* =====================================================
+       TỰ TẮT SERVER KHI ĐÓNG TAB
+       - Gửi GET /shutdown đến python server khi tab bị đóng
+       - Dùng sendBeacon (ưu tiên) hoặc fetch keepalive làm fallback
+       - visibilitychange bắt trường hợp tab hidden trước khi unload
+    ===================================================== */
+    function callShutdown() {
+      const url = window.location.origin + '/shutdown';
+      // sendBeacon: đảm bảo request hoàn thành dù trang đã unload
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url);
+      } else {
+        // fallback keepalive fetch
+        try {
+          fetch(url, { method: 'GET', keepalive: true }).catch(() => {});
+        } catch (_) {}
+      }
+    }
+
+    // beforeunload: đóng tab / cửa sổ / reload
+    window.addEventListener('beforeunload', callShutdown);
+
+    // pagehide: bắt thêm trường hợp mobile/bfcache
+    window.addEventListener('pagehide', callShutdown);
 
     /* =====================================================
        KHỞI ĐỘNG
