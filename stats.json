@@ -1,16 +1,16 @@
 {
-    "files_deleted":  20096,
-    "space_saved_mb":  100480,
-    "last_run":  "2026-05-02 16:09",
+    "files_deleted":  75,
+    "space_saved_mb":  15,
+    "last_run":  "2026-05-02 17:07",
     "status":  "Hoan tat",
-    "temp":  0,
-    "downloads":  20096,
+    "temp":  19,
+    "downloads":  6,
     "cache":  0,
-    "recycle":  0,
+    "recycle":  50,
     "logs":  [
-                 "Da don Temp (0 file)",
+                 "Da don Temp (19 file)",
                  "Da don Cache (0 muc)",
-                 "Da don Downloads (20096 file)",
+                 "Da don Downloads (6 file)",
                  "Da xoa Recycle Bin"
              ]
 }

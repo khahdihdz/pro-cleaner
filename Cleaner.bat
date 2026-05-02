@@ -2,10 +2,6 @@
 chcp 65001 >nul 2>&1
 setlocal enabledelayedexpansion
 
-rem == Bat buoc console dung font ho tro Unicode (Lucida Console / Consolas) ==
-reg add "HKCU\Console" /v "FaceName" /t REG_SZ /d "Lucida Console" /f >nul 2>&1
-reg add "HKCU\Console" /v "FontSize"  /t REG_DWORD /d 0x000E0000 /f >nul 2>&1
-
 color 0A
 title Windows 11 Cleaner Pro v2.0
 
@@ -478,17 +474,36 @@ rem ============================================================
 :EXIT_PROGRAM
 cls
 color 0A
-call :LINE
-echo  ^|  CAM ON DA SU DUNG WINDOWS 11 CLEANER PRO!                 ^|
-call :LINE
-echo    Da xoa: !TOTAL_FILES! file  ^|  Giai phong: ~!TOTAL_MB! MB
+echo  +==============================================================+
+echo  ^|                                                            ^|
+echo  ^|   WINDOWS 11 CLEANER PRO  v2.0  -  By khahdihdz          ^|
+echo  ^|                                                            ^|
+echo  +==============================================================+
+echo  ^|                                                            ^|
+echo  ^|   CAM ON BAN DA SU DUNG CHUONG TRINH!                     ^|
+echo  ^|   Hope you enjoyed it  ^^_^^                                  ^|
+echo  ^|                                                            ^|
+echo  +==============================================================+
 echo.
-
+echo    KET QUA PHIEN NAY:
+echo.
+echo    +------------------------------------------+
+echo    ^|  Temp files    : !TEMP_FILES! file
+echo    ^|  Cache / Recent: !CACHE_FILES! muc
+echo    ^|  Downloads     : !DL_FILES! file / muc
+echo    ^|  Recycle Bin   : !RC_FILES! muc
+echo    ^|  ----------------------------------------
+echo    ^|  Tong cong     : !TOTAL_FILES! file da xoa
+echo    ^|  Giai phong    : ~!TOTAL_MB! MB
+echo    +------------------------------------------+
+echo.
 if defined DASHBOARD_PORT (
     echo    [i] Neu server van dang chay, dong cua so PowerShell de tat.
     echo.
 )
-
-timeout /t 3 >nul
+echo    [*] Se mo trang tac gia va dong sau 8 giay...
+echo.
+ping -n 9 127.0.0.1 >nul
+start "" "https://khahdihdz.github.io"
 endlocal
 exit /b 0
