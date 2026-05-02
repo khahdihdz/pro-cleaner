@@ -174,12 +174,51 @@ set /a DC=0
 set /a ASK=0
 
 echo    Thu muc: !DLP!
-echo    [i] Giu nguyen thu muc con - chi xoa file rac ben trong
 echo.
-echo    -- Buoc 1: Xoa file rac (.tmp .log .bak .old) trong tat ca thu muc --
+echo    [i] Xoa TOAN BO noi dung ben trong moi thu muc con.
+echo    [i] Ban than thu muc con se DUOC GIU LAI.
+echo    [i] Cau truc: Downloads\thu_muc_con\ (giu) -- noi dung ben trong (xoa).
 echo.
 
-rem Xoa file rac trong thu muc goc Downloads
+rem -- Hoi xac nhan truoc khi xoa --
+set /p "CFDL=    >> Xac nhan lam sach noi dung ben trong cac thu muc con? (Y/N): "
+if /i not "!CFDL!"=="Y" (
+    echo    [--] Da huy.
+    timeout /t 2 >nul
+    goto MENU
+)
+echo.
+
+rem -------------------------------------------------------
+rem  Xoa TOAN BO noi dung ben trong tung thu muc con cap 1
+rem  - Xoa file truc tiep: del /f /s /q "%%D\*"
+rem  - Xoa thu muc con long nhau: for /d rd /s /q
+rem  - Giu nguyen ban than thu muc con cap 1
+rem -------------------------------------------------------
+echo    -- Lam sach noi dung thu muc con --
+echo.
+set /a FOLDER_COUNT=0
+for /d %%D in ("!DLP!\*") do (
+    set /a FOLDER_COUNT+=1
+    set /a FC=0
+    for /f %%i in ('dir /s /b "%%D" 2^>nul ^| find /c /v ""') do set /a FC=%%i
+    rem Xoa tat ca file ben trong (de quy)
+    del /f /s /q "%%D\*" >nul 2>&1
+    rem Xoa tat ca thu muc con long nhau ben trong
+    for /d /r "%%D" %%S in (*) do rd /s /q "%%S" >nul 2>&1
+    set /a DC+=FC
+    echo    [OK] [%%~nxD]: Da xoa !FC! muc - thu muc giu lai
+)
+
+if !FOLDER_COUNT!==0 (
+    echo    [--] Khong co thu muc con nao trong Downloads
+)
+
+echo.
+echo    -- File rac o thu muc goc (.tmp .log .bak .old) --
+echo.
+
+rem Xoa file rac trong thu muc goc Downloads (chi extension rac)
 for %%E in (tmp log bak old) do (
     set /a EC=0
     for /f %%i in ('dir /b /a-d "!DLP!\*.%%E" 2^>nul ^| find /c /v ""') do set /a EC=%%i
@@ -190,49 +229,13 @@ for %%E in (tmp log bak old) do (
     )
 )
 
-rem Xoa file rac trong tung thu muc con hien co (chi 1 cap - giu cau truc)
-for /d %%D in ("!DLP!\*") do (
-    set "SUBDIR=%%D"
-    for %%E in (tmp log bak old) do (
-        set /a EC2=0
-        for /f %%i in ('dir /b /a-d "%%D\*.%%E" 2^>nul ^| find /c /v ""') do set /a EC2=%%i
-        if !EC2! gtr 0 (
-            del /f /q "%%D\*.%%E" >nul 2>&1
-            set /a DC+=EC2
-            echo    [OK] [%%~nxD]: Xoa !EC2! file *.%%E
-        )
-    )
-)
-
-echo.
-echo    -- Buoc 2: File cai dat cu qua 30 ngay (chi trong thu muc goc) --
-echo.
-
-for %%E in (exe msi zip) do (
-    for /f "delims=" %%F in ('forfiles /p "!DLP!" /m "*.%%E" /d -30 /c "cmd /c echo @path" 2^>nul') do (
-        set /a ASK+=1
-        echo    File: %%F
-        set /p "YN=    >> Xoa file nay? (Y/N): "
-        if /i "!YN!"=="Y" (
-            del /f /q "%%F" >nul 2>&1
-            set /a DC+=1
-            echo    [OK] Da xoa
-        ) else (
-            echo    [--] Bo qua
-        )
-        echo.
-    )
-)
-
-if !ASK!==0 echo    [--] Khong co file .exe/.msi/.zip nao cu qua 30 ngay
-
 set /a DL_FILES=DC
 set /a TOTAL_FILES+=DC
 set /a TOTAL_MB+=DC*5
 
 echo.
 call :LINE2
-echo    KET QUA: Da xoa !DC! file trong Downloads (thu muc con giu nguyen)
+echo    KET QUA: !FOLDER_COUNT! thu muc con da duoc lam sach, !DC! muc da xoa
 call :LINE2
 call :SAVE_STATS
 echo    [OK] Da ghi stats.json
@@ -320,16 +323,16 @@ for %%E in (tmp log bak old) do (
     for /f %%i in ('dir /b /a-d "%USERPROFILE%\Downloads\*.%%E" 2^>nul ^| find /c /v ""') do set /a T3+=%%i
     del /f /q "%USERPROFILE%\Downloads\*.%%E" >nul 2>&1
 )
-rem Xoa file rac trong tung thu muc con hien co
+rem Lam sach noi dung ben trong tung thu muc con (giu ban than thu muc con)
+set /a T3_FOLDERS=0
 for /d %%D in ("%USERPROFILE%\Downloads\*") do (
-    for %%E in (tmp log bak old) do (
-        for /f %%i in ('dir /b /a-d "%%D\*.%%E" 2^>nul ^| find /c /v ""') do set /a T3+=%%i
-        del /f /q "%%D\*.%%E" >nul 2>&1
-    )
+    set /a T3_FOLDERS+=1
+    del /f /s /q "%%D\*" >nul 2>&1
+    for /d /r "%%D" %%S in (*) do rd /s /q "%%S" >nul 2>&1
 )
-set /a DL_FILES=T3
-set /a TOTAL_FILES+=T3
-echo    [OK] Downloads: !T3! file (thu muc con giu nguyen)
+set /a DL_FILES=T3+T3_FOLDERS
+set /a TOTAL_FILES+=T3+T3_FOLDERS
+echo    [OK] Downloads: !T3_FOLDERS! thu muc con lam sach + !T3! file rac xoa
 
 echo.
 echo    [4/4] Dang don Recycle Bin...
@@ -358,8 +361,14 @@ rem ============================================================
 rem  [6] MO DASHBOARD
 rem ============================================================
 :OPEN_DASHBOARD
+cls
+color 0B
+call :LINE
+echo  ^|  [6] MO DASHBOARD                                          ^|
+call :LINE
+echo.
+
 if not exist "%DASHBOARD_FILE%" (
-    echo.
     echo    [!] Khong tim thay dashboard.html
     echo    Hay dat dashboard.html cung thu muc voi Cleaner.bat
     echo.
@@ -367,106 +376,54 @@ if not exist "%DASHBOARD_FILE%" (
     goto MENU
 )
 
-rem -- Kiem tra Python co san khong --
+rem -- [1/3] Kiem tra Python --
+echo    [1/3] Kiem tra Python...
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo.
     echo    [!] Khong tim thay Python. Vui long cai Python va thu lai.
     echo    Tai: https://www.python.org/downloads/
     echo.
     pause
     goto MENU
 )
-
+for /f "tokens=*" %%V in ('python --version 2^>^&1') do echo    [OK] %%V
 echo.
-echo    Dang khoi dong HTTP server (python -m http.server)...
 
-rem -- Chon port bat dau --
-set /a PORT=8000
+rem -- [2/3] Mo PowerShell chay python -m http.server 8000 tu thu muc chua Cleaner.bat --
+echo    [2/3] Khoi dong PowerShell chay server...
+set "DASHBOARD_PORT=8000"
 
-rem -------------------------------------------------------
-rem  Kiem tra port con trong
-rem -------------------------------------------------------
-:CHECK_PORT
 PowerShell -NoProfile -Command ^
-  "if(Get-NetTCPConnection -State Listen -LocalPort !PORT! -ErrorAction SilentlyContinue){exit 1}else{exit 0}" >nul 2>&1
-if errorlevel 1 (
-    set /a PORT+=1
-    if !PORT! gtr 8800 (
-        echo    [!] Khong tim duoc port trong tu 8000-8800. Thoat.
-        pause
-        goto MENU
-    )
-    goto CHECK_PORT
-)
+  "Start-Process powershell -ArgumentList '-NoExit', '-NoProfile', '-Command', 'cd \"%SCRIPT_DIR%\"; Write-Host \"  [Windows 11 Cleaner Pro] Dashboard Server\" -ForegroundColor Cyan; Write-Host \"  ========================================\" -ForegroundColor Cyan; Write-Host \"  Lenh: python -m http.server 8000 --bind 127.0.0.1\" -ForegroundColor Yellow; Write-Host \"  Thu muc: %SCRIPT_DIR%\" -ForegroundColor Yellow; Write-Host \"\"; python -m http.server 8000 --bind 127.0.0.1' -WindowStyle Normal"
 
-rem -------------------------------------------------------
-rem  Ghi Python server script ho tro endpoint /shutdown
-rem  Script xu ly: phuc vu file tinh + GET /shutdown tu tat server
-rem -------------------------------------------------------
-set "PY_SCRIPT=%TEMP%\cleaner_srv_!PORT!.py"
-set "PID_FILE=%TEMP%\cleaner_srv_!PORT!.pid"
-set "SRV_DIR=%SCRIPT_DIR%"
+echo    [OK] Cua so PowerShell da mo - dang khoi dong server...
+echo.
 
-rem -- Viet file .py bang PowerShell de tranh ky tu dac biet bat --
+rem -- [3/3] Cho server san sang roi mo trinh duyet --
+echo    [3/3] Cho server san sang (toi da 8 giay)...
+set /a WAIT=0
+:WAIT_SERVER
+timeout /t 1 >nul
+set /a WAIT+=1
 PowerShell -NoProfile -Command ^
-  "$port=!PORT!; $sdir='!SRV_DIR!'; $pf='!PID_FILE!'; $py='!PY_SCRIPT!';" ^
-  "$lines = @(" ^
-  "  'import http.server, os, sys, threading'," ^
-  "  'PORT=%port%'" ^
-  "  .Replace('%port%',$port)," ^
-  "  'DIR=r\"\"\"$sdir\"\"\"'" ^
-  "  .Replace('$sdir',$sdir.TrimEnd('\'))," ^
-  "  'PID_FILE=r\"\"\"$pf\"\"\"'" ^
-  "  .Replace('$pf',$pf)," ^
-  "  'open(PID_FILE,\"w\").write(str(os.getpid()))'," ^
-  "  'class H(http.server.SimpleHTTPRequestHandler):'," ^
-  "  '    def __init__(self,*a,**k): super().__init__(*a,directory=DIR,**k)'," ^
-  "  '    def do_GET(self):'," ^
-  "  '        if self.path==\"/shutdown\":'," ^
-  "  '            self.send_response(200)'," ^
-  "  '            self.send_header(\"Access-Control-Allow-Origin\",\"*\")'," ^
-  "  '            self.end_headers()'," ^
-  "  '            self.wfile.write(b\"ok\")'," ^
-  "  '            t=threading.Thread(target=self.server.shutdown,daemon=True)'," ^
-  "  '            t.start()'," ^
-  "  '        else: super().do_GET()'," ^
-  "  '    def log_message(self,*a): pass'," ^
-  "  'srv=http.server.HTTPServer((\"localhost\",PORT),H)'," ^
-  "  'srv.serve_forever()'," ^
-  "  'try:'," ^
-  "  '    os.remove(PID_FILE)'," ^
-  "  'except: pass'" ^
-  "); [IO.File]::WriteAllLines($py,$lines,[Text.UTF8Encoding]::new($false))" >nul 2>&1
+  "try{(New-Object Net.Sockets.TcpClient).Connect('localhost',8000);exit 0}catch{exit 1}" >nul 2>&1
+if not errorlevel 1 goto SERVER_READY
+if !WAIT! lss 8 goto WAIT_SERVER
+echo    [i] Server chua phan hoi nhung van thu mo trinh duyet...
 
-rem -- Luu port dang chay --
-set "DASHBOARD_PORT=!PORT!"
-
-rem -- Khoi dong Python server qua PowerShell an (khong hien cua so cmd) --
-PowerShell -NoProfile -WindowStyle Hidden -Command ^
-  "Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile -Command python \"!PY_SCRIPT!\"'" >nul 2>&1
-
-rem -- Cho server san sang --
-timeout /t 2 >nul
-
-rem -- Doc PID --
-if exist "!PID_FILE!" (
-    set /p SRV_PID=<"!PID_FILE!"
-)
-
-rem -- Mo trinh duyet --
-start "" "http://localhost:!PORT!/dashboard.html"
+:SERVER_READY
+start "" "http://localhost:8000/dashboard.html"
 
 echo.
 call :LINE
-echo  ^|  DASHBOARD DA KHOI DONG                                    ^|
+echo  ^|  DASHBOARD DA KHOI DONG THANH CONG                         ^|
 call :LINE
-echo    URL   : http://localhost:!PORT!/dashboard.html
-echo    Port  : !PORT!
-echo    Server: python -m http.server - chay ngam
+echo    URL    : http://localhost:8000/dashboard.html
+echo    Lenh   : python -m http.server 8000 --bind 127.0.0.1
+echo    Thu muc: %SCRIPT_DIR%
 call :LINE2
-echo    [i] Server tu dong dung khi ban dong tab trinh duyet.
-echo    [i] Hoac chon [0] Thoat de dung server thu cong.
+echo    [i] Cua so PowerShell dang chay server - KHONG dong cua so do.
+echo    [i] Dong cua so PowerShell khi muon tat server.
 echo.
 timeout /t 3 >nul
 goto MENU
@@ -527,24 +484,8 @@ call :LINE
 echo    Da xoa: !TOTAL_FILES! file  ^|  Giai phong: ~!TOTAL_MB! MB
 echo.
 
-rem -- Dung python HTTP server neu dang chay --
 if defined DASHBOARD_PORT (
-    echo    Dang dung python HTTP server tai port !DASHBOARD_PORT!...
-    rem Thu goi /shutdown endpoint truoc
-    PowerShell -NoProfile -Command ^
-      "try { Invoke-WebRequest -Uri 'http://localhost:!DASHBOARD_PORT!/shutdown' -UseBasicParsing -TimeoutSec 2 | Out-Null } catch {}" >nul 2>&1
-    timeout /t 1 >nul
-    rem Du phong: kill qua PID neu con song
-    if defined SRV_PID (
-        PowerShell -NoProfile -Command ^
-          "try { Stop-Process -Id !SRV_PID! -Force -ErrorAction SilentlyContinue } catch {}" >nul 2>&1
-    )
-    rem Xoa file script va pid tam
-    set "PY_SCRIPT=%TEMP%\cleaner_srv_!DASHBOARD_PORT!.py"
-    set "PID_FILE=%TEMP%\cleaner_srv_!DASHBOARD_PORT!.pid"
-    if exist "!PY_SCRIPT!" del /f /q "!PY_SCRIPT!" >nul 2>&1
-    if exist "!PID_FILE!"  del /f /q "!PID_FILE!"  >nul 2>&1
-    echo    [OK] Server da dung.
+    echo    [i] Neu server van dang chay, dong cua so PowerShell de tat.
     echo.
 )
 
