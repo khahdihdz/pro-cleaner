@@ -7,6 +7,12 @@
     "downloads":  6,
     "cache":  0,
     "recycle":  50,
+    "schedule_info":  {
+                          "frequency":  "Hang ngay luc 3:00 SA",
+                          "next_run":  "2026-05-06 15:00",
+                          "last_auto":  "Chua chay lan nao",
+                          "enabled":  true
+                      },
     "logs":  [
                  "Da don Temp (19 file)",
                  "Da don Cache (0 muc)",

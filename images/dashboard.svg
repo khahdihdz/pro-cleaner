@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+  <defs>
+    <style>
+      .f-body { font-family: 'Segoe UI', 'Arial', sans-serif; }
+      .f-mono { font-family: 'Consolas', 'Courier New', monospace; }
+      .f-disp { font-family: 'Arial Black', 'Impact', sans-serif; letter-spacing: 0.03em; }
+    </style>
+    <linearGradient id="gBrand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="gBlueTop" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="gGreenTop" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#86efac"/>
+    </linearGradient>
+    <linearGradient id="gYellowTop" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+    <linearGradient id="gPurpleTop" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+    <linearGradient id="gBarBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="gBarGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#86efac"/>
+    </linearGradient>
+    <linearGradient id="gBarYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+    <linearGradient id="gBarRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#f87171"/>
+    </linearGradient>
+    <linearGradient id="gCountdown" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="gBg" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="50%" stop-color="#0b0e17"/>
+      <stop offset="100%" stop-color="#0d1220"/>
+    </linearGradient>
+  </defs>
+
+  <!-- PAGE BACKGROUND -->
+  <rect width="900" height="640" fill="url(#gBg)" rx="12"/>
+
+  <!-- Browser title bar -->
+  <rect width="900" height="34" fill="#1c2128" rx="12"/>
+  <rect y="24" width="900" height="10" fill="#1c2128"/>
+  <circle cx="22" cy="17" r="6" fill="#ff5f57"/>
+  <circle cx="44" cy="17" r="6" fill="#febc2e"/>
+  <circle cx="66" cy="17" r="6" fill="#28c840"/>
+  <rect x="110" y="7" width="280" height="20" fill="#2d333b" rx="5"/>
+  <text x="122" y="21" font-size="10.5" fill="#8b949e" class="f-mono">localhost:8742/dashboard.html</text>
+
+  <!-- ══ HEADER ══ -->
+  <rect y="34" width="900" height="56" fill="#0d1120"/>
+  <line x1="0" y1="89" x2="900" y2="89" stroke="#1e2a45" stroke-width="1"/>
+
+  <!-- brand-icon 44x44 -->
+  <rect x="20" y="45" width="40" height="40" fill="url(#gBrand)" rx="10"/>
+  <text x="40" y="70" text-anchor="middle" font-size="20">🧹</text>
+
+  <!-- brand-title + brand-sub -->
+  <text x="70" y="63" font-size="13" fill="#e8edf8" class="f-disp" font-weight="700">Cleaner Pro</text>
+  <text x="70" y="78" font-size="8" fill="#4a5a7a" class="f-body" letter-spacing="1.5">BẢNG ĐIỀU KHIỂN DỌN RÁC WINDOWS 11</text>
+
+  <!-- status-badge -->
+  <rect x="618" y="53" width="96" height="22" fill="#22c55e18" stroke="#22c55e33" stroke-width="1" rx="11"/>
+  <circle cx="634" cy="64" r="4" fill="#22c55e"/>
+  <text x="646" y="68" font-size="10" fill="#4ade80" class="f-body" font-weight="600">Hoàn tất</text>
+
+  <!-- btn-refresh -->
+  <rect x="724" y="52" width="72" height="24" fill="#1e2a45" stroke="#30363d" stroke-width="1" rx="6"/>
+  <text x="760" y="68" text-anchor="middle" font-size="10" fill="#60a5fa" class="f-body" font-weight="600">⟳  Làm mới</text>
+
+  <!-- refresh info + countdown -->
+  <text x="808" y="57" font-size="8" fill="#4a5a7a" class="f-body">Cập nhật: 2026-05-02 17:07</text>
+  <text x="808" y="70" font-size="8" fill="#4a5a7a" class="f-body">Tự làm mới sau</text>
+  <rect x="876" y="66" width="0" height="0"/>
+  <!-- countdown-bar-wrap -->
+  <rect x="856" y="67" width="22" height="3" fill="#1e2a45" rx="2"/>
+  <rect x="856" y="67" width="14" height="3" fill="url(#gCountdown)" rx="2"/>
+  <text x="882" y="71" font-size="8" fill="#4a5a7a" class="f-body">18s</text>
+
+  <!-- ══ SECTION LABEL 1 ══ -->
+  <text x="20" y="111" font-size="8.5" fill="#4a5a7a" class="f-body" font-weight="700" letter-spacing="1.2">📊  TỔNG QUAN PHIÊN GẦN NHẤT</text>
+  <line x1="220" y1="106" x2="880" y2="106" stroke="#1e2a45" stroke-width="1"/>
+
+  <!-- ══ STAT CARDS (row g-3) ══ -->
+  <!-- stat-card blue -->
+  <rect x="20" y="118" width="200" height="88" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+  <rect x="20" y="118" width="200" height="2.5" fill="url(#gBlueTop)" rx="2"/>
+  <rect x="34" y="131" width="34" height="34" fill="#3b82f618" rx="9"/>
+  <text x="51" y="153" text-anchor="middle" font-size="15" fill="#60a5fa">📄</text>
+  <text x="34" y="183" font-size="28" fill="#60a5fa" class="f-disp" font-weight="900">75</text>
+  <text x="90" y="175" font-size="10.5" fill="#7d8fae" class="f-body">Tổng file đã xóa</text>
+  <text x="90" y="188" font-size="8.5" fill="#4a5a7a" class="f-body">file trong phiên gần nhất</text>
+
+  <!-- stat-card green -->
+  <rect x="230" y="118" width="200" height="88" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+  <rect x="230" y="118" width="200" height="2.5" fill="url(#gGreenTop)" rx="2"/>
+  <rect x="244" y="131" width="34" height="34" fill="#22c55e18" rx="9"/>
+  <text x="261" y="153" text-anchor="middle" font-size="15" fill="#4ade80">💾</text>
+  <text x="244" y="183" font-size="28" fill="#4ade80" class="f-disp" font-weight="900">15</text>
+  <text x="300" y="175" font-size="10.5" fill="#7d8fae" class="f-body">MB giải phóng</text>
+  <text x="300" y="188" font-size="8.5" fill="#4a5a7a" class="f-body">dung lượng đã thu hồi</text>
+
+  <!-- stat-card yellow -->
+  <rect x="440" y="118" width="200" height="88" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+  <rect x="440" y="118" width="200" height="2.5" fill="url(#gYellowTop)" rx="2"/>
+  <rect x="454" y="131" width="34" height="34" fill="#f59e0b18" rx="9"/>
+  <text x="471" y="153" text-anchor="middle" font-size="15" fill="#fcd34d">🛡️</text>
+  <text x="454" y="178" font-size="15" fill="#fcd34d" class="f-disp" font-weight="900">Hoàn tất</text>
+  <text x="454" y="193" font-size="10.5" fill="#7d8fae" class="f-body">Trạng thái hệ thống</text>
+
+  <!-- stat-card purple -->
+  <rect x="650" y="118" width="230" height="88" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+  <rect x="650" y="118" width="230" height="2.5" fill="url(#gPurpleTop)" rx="2"/>
+  <rect x="664" y="131" width="34" height="34" fill="#a855f718" rx="9"/>
+  <text x="681" y="153" text-anchor="middle" font-size="15" fill="#c084fc">🕐</text>
+  <text x="664" y="174" font-size="12" fill="#c084fc" class="f-mono" font-weight="700">2026-05-02 17:07</text>
+  <text x="664" y="189" font-size="10.5" fill="#7d8fae" class="f-body">Lần chạy gần nhất</text>
+  <text x="664" y="201" font-size="8.5" fill="#4a5a7a" class="f-body">thời gian thực hiện</text>
+
+  <!-- ══ SECTION LABEL 2 ══ -->
+  <text x="20" y="230" font-size="8.5" fill="#4a5a7a" class="f-body" font-weight="700" letter-spacing="1.2">🥧  PHÂN TÍCH CHI TIẾT</text>
+  <line x1="188" y1="225" x2="880" y2="225" stroke="#1e2a45" stroke-width="1"/>
+
+  <!-- ══ BREAKDOWN CARD (left, col-xl-5) ══ -->
+  <rect x="20" y="238" width="390" height="205" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+  <!-- breakdown-title -->
+  <text x="38" y="261" font-size="12" fill="#e8edf8" class="f-body" font-weight="700">🔷  Phân loại theo module</text>
+  <line x1="38" y1="269" x2="393" y2="269" stroke="#1e2a45" stroke-width="1"/>
+
+  <!-- Temp: 19/75=25.3% → bar width = 25.3% of 330 = 83px -->
+  <text x="38" y="294" font-size="11" fill="#7d8fae" class="f-body">🌡  Temp</text>
+  <text x="375" y="294" text-anchor="end" font-size="11" fill="#e8edf8" class="f-mono" font-weight="700">19</text>
+  <rect x="38" y="299" width="330" height="7" fill="#1e2a45" rx="4"/>
+  <rect x="38" y="299" width="83"  height="7" fill="url(#gBarBlue)" rx="4"/>
+
+  <!-- Downloads: 6/75=8% → 26px -->
+  <text x="38" y="325" font-size="11" fill="#7d8fae" class="f-body">📂  Downloads</text>
+  <text x="375" y="325" text-anchor="end" font-size="11" fill="#e8edf8" class="f-mono" font-weight="700">6</text>
+  <rect x="38" y="330" width="330" height="7" fill="#1e2a45" rx="4"/>
+  <rect x="38" y="330" width="26"  height="7" fill="url(#gBarGreen)" rx="4"/>
+
+  <!-- Cache: 0/75=0% -->
+  <text x="38" y="356" font-size="11" fill="#7d8fae" class="f-body">⚡  Cache</text>
+  <text x="375" y="356" text-anchor="end" font-size="11" fill="#e8edf8" class="f-mono" font-weight="700">0</text>
+  <rect x="38" y="361" width="330" height="7" fill="#1e2a45" rx="4"/>
+
+  <!-- Recycle Bin: 50/75=66.7% → 220px -->
+  <text x="38" y="387" font-size="11" fill="#7d8fae" class="f-body">🗑  Recycle Bin</text>
+  <text x="375" y="387" text-anchor="end" font-size="11" fill="#e8edf8" class="f-mono" font-weight="700">50</text>
+  <rect x="38" y="392" width="330" height="7" fill="#1e2a45" rx="4"/>
+  <rect x="38" y="392" width="220" height="7" fill="url(#gBarRed)" rx="4"/>
+
+  <!-- Percent labels under bars -->
+  <text x="38" y="420" font-size="8" fill="#3b82f6" class="f-body">25%</text>
+  <text x="38" y="432" font-size="8" fill="#22c55e" class="f-body">8%</text>
+  <text x="38" y="432"/>
+  <text x="90" y="432" font-size="8" fill="#4a5a7a" class="f-body">0% cache · 67% recycle</text>
+
+  <!-- ══ DONUT CHART CARD (right, col-xl-7) ══ -->
+  <rect x="420" y="238" width="460" height="205" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+  <!-- chart-card-title -->
+  <text x="438" y="261" font-size="12" fill="#e8edf8" class="f-body" font-weight="700">🥧  Biểu đồ phân bổ file đã xóa</text>
+  <line x1="438" y1="269" x2="862" y2="269" stroke="#1e2a45" stroke-width="1"/>
+
+  <!-- DONUT: cx=580 cy=348 r=62 stroke-width=26, circ=389.6 -->
+  <!-- Temp   19/75=25.3% → 98.6 -->
+  <!-- DL      6/75= 8.0% → 31.2 -->
+  <!-- Recycle50/75=66.7% → 259.8 -->
+
+  <circle cx="580" cy="348" r="62" fill="none" stroke="#1e2a45" stroke-width="26"/>
+  <!-- Temp: blue -->
+  <circle cx="580" cy="348" r="62" fill="none" stroke="#3b82f6cc" stroke-width="26"
+    stroke-dasharray="98.6 291.0" stroke-dashoffset="97.4"
+    transform="rotate(-90 580 348)"/>
+  <!-- Downloads: green -->
+  <circle cx="580" cy="348" r="62" fill="none" stroke="#22c55ecc" stroke-width="26"
+    stroke-dasharray="31.2 358.4" stroke-dashoffset="-1.2"
+    transform="rotate(-90 580 348)"/>
+  <!-- Cache: yellow (0 = not visible, tiny dot for legend) -->
+  <!-- Recycle Bin: red -->
+  <circle cx="580" cy="348" r="62" fill="none" stroke="#ef4444cc" stroke-width="26"
+    stroke-dasharray="259.8 129.8" stroke-dashoffset="-32.4"
+    transform="rotate(-90 580 348)"/>
+
+  <!-- center label -->
+  <text x="580" y="342" text-anchor="middle" font-size="26" fill="#e8edf8" class="f-disp" font-weight="900">75</text>
+  <text x="580" y="358" text-anchor="middle" font-size="10" fill="#4a5a7a" class="f-body">files</text>
+
+  <!-- Chart.js legend (position: bottom) -->
+  <circle cx="448" cy="428" r="5.5" fill="#3b82f6cc"/>
+  <text x="460" y="432" font-size="10" fill="#7d8fae" class="f-body">Temp</text>
+  <circle cx="512" cy="428" r="5.5" fill="#22c55ecc"/>
+  <text x="524" y="432" font-size="10" fill="#7d8fae" class="f-body">Downloads</text>
+  <circle cx="608" cy="428" r="5.5" fill="#f59e0bcc"/>
+  <text x="620" y="432" font-size="10" fill="#7d8fae" class="f-body">Cache</text>
+  <circle cx="672" cy="428" r="5.5" fill="#ef4444cc"/>
+  <text x="684" y="432" font-size="10" fill="#7d8fae" class="f-body">Recycle Bin</text>
+
+  <!-- ══ SECTION LABEL 3 ══ -->
+  <text x="20" y="462" font-size="8.5" fill="#4a5a7a" class="f-body" font-weight="700" letter-spacing="1.2">📋  NHẬT KÝ HOẠT ĐỘNG</text>
+  <line x1="193" y1="457" x2="880" y2="457" stroke="#1e2a45" stroke-width="1"/>
+
+  <!-- ══ LOG CARD ══ -->
+  <rect x="20" y="470" width="860" height="145" fill="#141824" stroke="#1e2a45" stroke-width="1" rx="12"/>
+
+  <!-- log-card-title -->
+  <text x="38" y="492" font-size="12" fill="#e8edf8" class="f-body" font-weight="700">💻  Chi tiết các thao tác đã thực hiện</text>
+  <text x="780" y="492" font-size="8.5" fill="#4a5a7a" class="f-body">Cập nhật: 2026-05-02 17:07</text>
+
+  <!-- log-table-wrap border -->
+  <rect x="32" y="499" width="836" height="108" fill="#0d1120" stroke="#1e2a45" stroke-width="1" rx="7"/>
+
+  <!-- thead -->
+  <rect x="33" y="500" width="834" height="22" fill="#0d1120" rx="5"/>
+  <line x1="33" y1="522" x2="866" y2="522" stroke="#1e2a45" stroke-width="1"/>
+  <text x="72" y="515" font-size="8.5" fill="#4a5a7a" class="f-body" font-weight="700" letter-spacing="1">HOẠT ĐỘNG</text>
+  <text x="850" y="515" text-anchor="end" font-size="8.5" fill="#4a5a7a" class="f-body" font-weight="700">#</text>
+
+  <!-- Row 1 odd:#141824 -->
+  <rect x="33" y="522" width="834" height="23" fill="#141824"/>
+  <text x="50" y="537" font-size="12" fill="#22c55e">✔</text>
+  <text x="72" y="538" font-size="10.5" fill="#7d8fae" class="f-body">Da don Temp (19 file)</text>
+  <text x="850" y="538" text-anchor="end" font-size="9" fill="#4a5a7a" class="f-mono">1</text>
+  <line x1="33" y1="545" x2="866" y2="545" stroke="#1e2a4555" stroke-width="1"/>
+
+  <!-- Row 2 even:#10141e -->
+  <rect x="33" y="545" width="834" height="23" fill="#10141e"/>
+  <text x="50" y="560" font-size="12" fill="#22c55e">✔</text>
+  <text x="72" y="561" font-size="10.5" fill="#7d8fae" class="f-body">Da don Cache (0 muc)</text>
+  <text x="850" y="561" text-anchor="end" font-size="9" fill="#4a5a7a" class="f-mono">2</text>
+  <line x1="33" y1="568" x2="866" y2="568" stroke="#1e2a4555" stroke-width="1"/>
+
+  <!-- Row 3 odd -->
+  <rect x="33" y="568" width="834" height="23" fill="#141824"/>
+  <text x="50" y="583" font-size="12" fill="#22c55e">✔</text>
+  <text x="72" y="584" font-size="10.5" fill="#7d8fae" class="f-body">Da don Downloads (6 file)</text>
+  <text x="850" y="584" text-anchor="end" font-size="9" fill="#4a5a7a" class="f-mono">3</text>
+  <line x1="33" y1="591" x2="866" y2="591" stroke="#1e2a4555" stroke-width="1"/>
+
+  <!-- Row 4 even -->
+  <rect x="33" y="591" width="834" height="16" fill="#10141e"/>
+  <rect x="34" y="599" width="832" height="8" fill="#10141e" rx="5"/>
+  <text x="50" y="604" font-size="12" fill="#22c55e">✔</text>
+  <text x="72" y="604" font-size="10.5" fill="#7d8fae" class="f-body">Da xoa Recycle Bin</text>
+  <text x="850" y="604" text-anchor="end" font-size="9" fill="#4a5a7a" class="f-mono">4</text>
+
+  <!-- ══ FOOTER ══ -->
+  <line x1="0" y1="624" x2="900" y2="624" stroke="#1e2a45" stroke-width="1"/>
+  <text x="450" y="637" text-anchor="middle" font-size="8.5" fill="#4a5a7a" class="f-body">
+    Windows 11 Cleaner Pro  ·  Dashboard v2.0  ·  Tự động làm mới mỗi 10 giây  ·  2026-05-02 17:07
+  </text>
+</svg>

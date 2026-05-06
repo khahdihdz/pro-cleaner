@@ -777,6 +777,44 @@
 
         </div>
 
+        <!-- SCHEDULE INFO -->
+        <div class="section-label"><i class="bi bi-clock-history text-info"></i> Lịch dọn rác tự động</div>
+
+        <div class="log-card" id="scheduleCard" style="margin-bottom: 1.5rem;">
+          <div class="log-card-title">
+            <i class="bi bi-calendar-check" style="color:var(--accent-blue)"></i>
+            Trạng thái Scheduled Task
+            <span class="ms-auto">
+              <span id="scheduleBadge" class="badge" style="font-size:0.7rem; padding:4px 10px; border-radius:20px; background:#1e293b; color:var(--text-muted);">
+                Đang kiểm tra...
+              </span>
+            </span>
+          </div>
+          <div style="padding: 1rem 1.25rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+            <div style="flex:1; min-width:200px;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">Tên task</div>
+              <div style="font-size:0.9rem; color:var(--text-main); font-weight:500;" id="schedTaskName">Win11CleanerPro</div>
+            </div>
+            <div style="flex:1; min-width:200px;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">Tần suất</div>
+              <div style="font-size:0.9rem; color:var(--text-main);" id="schedFrequency">--</div>
+            </div>
+            <div style="flex:1; min-width:200px;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">Lần chạy tiếp theo</div>
+              <div style="font-size:0.9rem; color:var(--accent-green);" id="schedNextRun">--</div>
+            </div>
+            <div style="flex:1; min-width:200px;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">Lần chạy gần nhất</div>
+              <div style="font-size:0.9rem; color:var(--text-main);" id="schedLastRun">--</div>
+            </div>
+          </div>
+          <div style="padding: 0 1.25rem 1rem; font-size:0.78rem; color:var(--text-muted);">
+            <i class="bi bi-info-circle me-1"></i>
+            Để cài hoặc xóa lịch: chạy <code style="background:#0f172a; padding:2px 6px; border-radius:4px; color:#93c5fd;">Cleaner.bat</code>
+            → Chọn <strong>[7] Định kỳ tự động</strong>
+          </div>
+        </div>
+
         <!-- LOG TABLE -->
         <div class="section-label"><i class="bi bi-journal-text text-warning"></i> Nhật ký hoạt động</div>
 
@@ -818,7 +856,7 @@
     <!-- FOOTER -->
     <footer class="app-footer">
       <div class="container-fluid px-3 px-md-4">
-        Windows 11 Cleaner Pro &nbsp;·&nbsp; Dashboard v2.0
+        Windows 11 Cleaner Pro &nbsp;·&nbsp; Dashboard v3.0
         &nbsp;·&nbsp; Tự động làm mới mỗi 10 giây
         &nbsp;·&nbsp; <span id="footerTime">--</span>
       </div>
@@ -1180,7 +1218,55 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadStats();
       startCountdown();
+      loadScheduleInfo();
     });
+
+    // ============================================================
+    // SCHEDULE INFO - doc tu stats.json field schedule (neu co)
+    // hoac hien thi huong dan cai dat
+    // ============================================================
+    function loadScheduleInfo() {
+      // Thu doc stats.json de lay schedule_info neu bat
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'stats.json?_=' + Date.now(), true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            renderScheduleInfo(data.schedule_info || null);
+          } catch (e) {
+            renderScheduleInfo(null);
+          }
+        } else {
+          renderScheduleInfo(null);
+        }
+      };
+      xhr.onerror = function () { renderScheduleInfo(null); };
+      xhr.send();
+    }
+
+    function renderScheduleInfo(info) {
+      var badge = document.getElementById('scheduleBadge');
+      var freq  = document.getElementById('schedFrequency');
+      var next  = document.getElementById('schedNextRun');
+      var last  = document.getElementById('schedLastRun');
+
+      if (info && info.enabled) {
+        badge.textContent = '✓ Đang hoạt động';
+        badge.style.background = 'rgba(34,197,94,0.15)';
+        badge.style.color = '#4ade80';
+        freq.textContent  = info.frequency  || '--';
+        next.textContent  = info.next_run   || '--';
+        last.textContent  = info.last_auto  || '--';
+      } else {
+        badge.textContent = '✗ Chưa cài đặt';
+        badge.style.background = 'rgba(239,68,68,0.12)';
+        badge.style.color = '#f87171';
+        freq.textContent = 'Chưa thiết lập';
+        next.textContent = 'N/A';
+        last.textContent = 'N/A';
+      }
+    }
   </script>
 </body>
 </html>
